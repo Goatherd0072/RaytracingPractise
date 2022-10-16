@@ -66,9 +66,9 @@ color3 ray_color(const ray& r,const hittable & world, int depth)
         return color3(0, 0, 0);
     }
 
-    if (world.hit(r, 0, infinity, rec))
+    if (world.hit(r, 0.001, infinity, rec))
     {
-        point3 target = rec.p + rec.normal + random_unit_sphere();//C 为交点外一随机圆的一点
+        point3 target = rec.p + rec.normal + random_unit_hemisphere(rec.normal);//C 为交点外一随机圆的一点
         return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);//折射光线即为 C-P(交点)
     }
     //auto t = hit_sphere(point3(0, 0, -1), 0.5, r);

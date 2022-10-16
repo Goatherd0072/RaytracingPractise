@@ -12,10 +12,11 @@ void Print_Color(ostream & out,color3 Color_Pixel,int samples_per_pixel)
 	auto b = Color_Pixel.z();
 
 	//处理颜色与样品数
+	//将颜色值除以样品数量，并取其平方根以进行 gamma矫正
 	auto scale = 1.0 / samples_per_pixel;
-	r *= scale;
-	g *= scale;
-	b *= scale;
+	r = sqrt(r * scale);
+	g = sqrt(g * scale);
+	b = sqrt(b * scale);
 
 	//将颜色转化为255标准
 	out << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << " "

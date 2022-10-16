@@ -148,7 +148,7 @@ inline vec3 unit_vec3(vec3 v)
 	return v / v.length();
 }
 
-//随机单位球
+//随机生成碰撞点漫反射范围的随机单位球
 vec3 random_unit_sphere()
 {
 	while (true)
@@ -158,5 +158,22 @@ vec3 random_unit_sphere()
 		return c;
 	}
 }
-
+//碰撞点与单位球的随机向量，以实现 Lambertian反射
+vec3 random_unit_vector()
+{
+	return unit_vec3(random_unit_sphere());
+}
+//随机生成碰撞点漫反射范围的随机单位半球,以便实现半球散射
+vec3 random_unit_hemisphere(const vec3& normal)
+{
+	vec3  unit_sphere = random_unit_sphere();
+	if (dot(unit_sphere, normal) > 0.0)//如果半球和法线在一个表面
+	{
+		return unit_sphere;
+	}
+	else
+	{
+		return -unit_sphere;
+	}
+}
 #endif

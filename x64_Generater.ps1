@@ -6,3 +6,4 @@ cp .\image.png .\image\image.png
 rm .\image.png
 rm .\image.ppm
 rm .\image1.ppm
+echo "Image Generated Successfully!"
