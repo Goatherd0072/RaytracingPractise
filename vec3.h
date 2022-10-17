@@ -76,6 +76,12 @@ public:
 	{
 		return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
 	}
+	//判断向量是否在各个方向都为0
+	bool near_zero() const
+	{
+		const auto s = 1e-8;
+		return fabs(e[0]) < s && fabs(e[1]) < s && fabs(e[2]) < s;
+	}
 	
 public:
     double e[3]; //坐标
@@ -176,4 +182,10 @@ vec3 random_unit_hemisphere(const vec3& normal)
 		return -unit_sphere;
 	}
 }
+//计算反射光向量，v入射光线，n法线
+vec3 reflect(const vec3& v,const vec3& n)
+{
+	return v - 2 * dot(v, n) * n; //放射光线理应为v+2b， 但dot(v, n)为b的长度，由于入射光线和法线夹角大于90，所以2 * dot(v, n) * n为负值
+}
+
 #endif

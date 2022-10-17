@@ -1,9 +1,19 @@
-.\x64\Debug\RaytracingPractise.exe > image1.ppm
-type .\image1.ppm | Out-File -Encoding "Default" .\image.ppm
-magick image.ppm image.png
-cp .\image.ppm .\image\image.ppm
-cp .\image.png .\image\image.png
-rm .\image.png
-rm .\image.ppm
-rm .\image1.ppm
-echo "Image Generated Successfully!"
+try {
+    $filename = Read-Host "input image name"
+    $filenamePNG = $filename + ".png"
+    $filenamePPM = $filename + ".ppm"
+    $filename1PPM = $filename + "1" + ".ppm"
+
+    .\x64\Debug\RaytracingPractise.exe > $filename1PPM 
+    type .\$filename1PPM  | Out-File -Encoding "Default" .\$filenamePPM 
+    magick $filenamePPM  $filenamePNG
+    cp .\$filenamePPM .\image\$filenamePPM
+    cp .\$filenamePNG .\image\$filenamePNG
+    rm .\$filenamePNG
+    rm .\$filenamePPM
+    rm .\$filename1PPM
+    echo "Finish!"
+}
+catch {
+    echo "Something wrong!"
+}

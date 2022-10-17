@@ -15,29 +15,32 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vec3.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sphere.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ray.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="math_constants.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="hittable_list.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="hittable.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="camera.h">
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="color.h">
-      <Filter>源文件</Filter>
+      <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>源文件</Filter>
+    <ClInclude Include="hittable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="hittable_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="math_constants.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="vec3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

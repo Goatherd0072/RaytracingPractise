@@ -9,6 +9,7 @@
 #include"camera.h"
 
 #include"vec3.h"
+#include"material.h"
 
 using namespace std;
 
@@ -68,8 +69,15 @@ color3 ray_color(const ray& r,const hittable & world, int depth)
 
     if (world.hit(r, 0.001, infinity, rec))
     {
-        point3 target = rec.p + rec.normal + random_unit_hemisphere(rec.normal);//C 为交点外一随机圆的一点
-        return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);//折射光线即为 C-P(交点)
+        //漫反射
+        //point3 target = rec.p + rec.normal + random_unit_hemisphere(rec.normal);//C 为交点外一随机圆的一点
+        //return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);//折射光线即为 C-P(交点)
+
+        ray scattered;//散射光
+        color3 attenuation;//衰减值
+        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+            return attenuation * ray_color(scattered, world, depth - 1);
+        return color3(0, 0, 0);
     }
     //auto t = hit_sphere(point3(0, 0, -1), 0.5, r);
     //if (t > 0.0) //确保是摄像机前方的物体
@@ -103,8 +111,19 @@ int main()
     //世界
     hittable_list world;
     //world.add(make_shared<sphere>(point3(0, +100.5, -1.0), 100));
-    world.add(make_shared<sphere>(point3(0, 0, -1.0), 0.5));
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+    //world.add(make_shared<sphere>(point3(0, 0, -1.0), 0.5));
+    //world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+
+    //添加材质
+    auto material_ground = make_shared<lambertian>(color3(0.8, 0.8, 0.0));
+    auto material_center = make_shared<lambertian>(color3(0.7, 0.3, 0.3));
+    auto material_left = make_shared<metal>(color3(0.8, 0.8, 0.8),0.0);
+    auto material_right = make_shared<metal>(color3(0.8, 0.6, 0.2),1.0);
+
+    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
+    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     // 渲染
     cout << "P3\n"
