@@ -116,9 +116,10 @@ int main()
 
     //添加材质
     auto material_ground = make_shared<lambertian>(color3(0.8, 0.8, 0.0));
-    auto material_center = make_shared<lambertian>(color3(0.7, 0.3, 0.3));
-    auto material_left = make_shared<metal>(color3(0.8, 0.8, 0.8),0.0);
-    auto material_right = make_shared<metal>(color3(0.8, 0.6, 0.2),1.0);
+    //auto material_center = make_shared<lambertian>(color3(0.1, 0.2, 0.5));
+    auto material_center = make_shared<dielectric>(1.5);
+    auto material_left = make_shared<dielectric>(1.5);
+    auto material_right = make_shared<metal>(color3(0.8, 0.6, 0.2), 1.0);
 
     world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
     world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
@@ -131,7 +132,7 @@ int main()
 
     for (int i = image_height - 1; i >= 0; i--)//每行
     {
-        cerr << "RemainLine: " << i << endl << flush;
+        cerr << "RemainLine: " << i << " " << flush;
         for (int j = 0; j < image_width; j++)//每列
         {
             color3 pixel_color(0, 0, 0);

@@ -182,10 +182,25 @@ vec3 random_unit_hemisphere(const vec3& normal)
 		return -unit_sphere;
 	}
 }
+
 //计算反射光向量，v入射光线，n法线
 vec3 reflect(const vec3& v,const vec3& n)
 {
 	return v - 2 * dot(v, n) * n; //放射光线理应为v+2b， 但dot(v, n)为b的长度，由于入射光线和法线夹角大于90，所以2 * dot(v, n) * n为负值
+}
+
+//计算折射光向量 R为入射光的方向向量 n为入射平面的法线，ratio 为两个介质折射率之比 n1/n2
+//将折射光线向量分解为 垂直于法线的 R1 和平行于法线的 R2
+//cosθ = (-R * n) (由 a⋅b=|a||b|cosθ 当a、b为单位向量时推导)
+//R1 = η/η′ * (R+cosθn) = η/η′ * (R+(−R⋅n)n)
+//R2 = -sqrt(1 - |R1|^2 )* n
+//详细推导过程 ： https://zhuanlan.zhihu.com/p/91129191  https://github.com/RayTracing/raytracing.github.io/issues/1082 TODO：
+vec3 refract(const vec3& R, const vec3& n, double ratio)
+{
+	auto cos_theta = fmin(dot(-R, n), 1.0);
+	vec3 R1 = ratio * (R + cos_theta * n);
+	vec3 R2 = -sqrt(fabs(1.0 - R1.length_squared())) * n;
+	return R1 + R2;
 }
 
 #endif

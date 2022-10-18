@@ -19,7 +19,7 @@ public:
 
 };
 
-bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& record) const
+bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const
 {
     vec3 P_C = r.origin() - center;//(P0-C)
     vec3 U = r.direction();//U
@@ -30,21 +30,22 @@ bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& record) c
     auto discriminant  = b_half * b_half - a * c;
 
     if (discriminant  < 0) return false; //未相交
-    auto sqrtD = sqrt(discriminant );
+    auto sqrtD = sqrt(discriminant);
 
     //判断两根是否在所需范围内
     auto root = (-b_half - sqrtD) / a;
     if (root<t_min || root>t_max)
     {
-        auto root = (-b_half + sqrtD) / a;
+        root = (-b_half + sqrtD) / a;
         if (root<t_min || root>t_max)
             return false;
     }
-    record.p = r.at(root);
-    record.t = root;
-    vec3 outward_normal = (record.p - center) / radius;
-    record.set_front_normal(r, outward_normal);
-    record.mat_ptr = mat_ptr;
+
+    rec.t = root;
+    rec.p = r.at(rec.t);
+    vec3 outward_normal = (rec.p - center) / radius;
+    rec.set_face_normal(r, outward_normal);
+    rec.mat_ptr = mat_ptr;
 
     return true;
 }

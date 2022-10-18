@@ -12,14 +12,14 @@ struct hit_record
 	point3 p;//交点
 	vec3 normal;//法线
 	double t;//距离
-	bool front;//外面
+	bool front_face;//外面
 	shared_ptr<material> mat_ptr;//程序开始时候，光线碰撞到表面时，则会将此指针指向球类里的hit_record指针
 
 	//判断射线位于物体内部还是外部，并将法线调整未向外的法线(光线方向与法线方向一样，则在内部。相反则在外部)
-	inline void set_front_normal(const ray& r, const vec3& outward_normal)
+	inline void set_face_normal(const ray& r, const vec3& outward_normal)
 	{
-		front = dot(r.direction(), outward_normal) < 0;//小于0则相反，在外
-		normal = front ? outward_normal : -outward_normal;
+		front_face = dot(r.direction(), outward_normal) < 0;//小于0则相反，在外
+		normal = front_face ? outward_normal : -outward_normal;
 	}
 };
 
