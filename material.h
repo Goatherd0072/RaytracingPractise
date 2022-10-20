@@ -112,11 +112,11 @@ private:
 	// 折射率 r = R0 + (1 - R0) ( (1 - cos) )^5 
 	// R0 = ( (n1 - n2)/(n1 + n2) )^2 
 	//R0是光的反射系数的平行于法线， n1 n2为两侧介质的折射率， 由于图形学入射光线大部分情况都在空气，所以 n1 近似于 1
-	static double Schlick_Approximation(double cos, double index_ref)
+	static double Schlick_Approximation(double cos_t, double index_ref)
 	{
 		auto R0 = (1 - index_ref) / (1 + index_ref);
 		R0 *= R0;
-		return R0 + (1 - R0) * pow((1 - cos), 5);
+		return R0 + (1 - R0) * pow((1 - cos_t), 5);
 	}
 	
 };

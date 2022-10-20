@@ -106,8 +106,6 @@ int main()
     const int samples_per_pixel = 100;
     const int max_depth = 50;//射线颜色递归次数
 
-    //相机
-    camera cam;
     //世界
     hittable_list world;
     //world.add(make_shared<sphere>(point3(0, +100.5, -1.0), 100));
@@ -115,6 +113,14 @@ int main()
     //world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     //添加材质
+    //auto R = cos(pi / 4);
+
+    //auto material_left = make_shared<lambertian>(color3(0, 0, 1));
+    //auto material_right = make_shared<lambertian>(color3(1, 0, 0));
+
+    //world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
+    //world.add(make_shared<sphere>(point3(R, 0, -1), R, material_right));
+
     auto material_ground = make_shared<lambertian>(color3(0.8, 0.8, 0.0));
     auto material_center = make_shared<lambertian>(color3(0.1, 0.2, 0.5));
     auto material_left = make_shared<dielectric>(1.5);
@@ -125,6 +131,9 @@ int main()
     world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
     world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
     world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+
+    //相机
+    camera cam(point3(0, 2, 1), point3(0, 0, -1), vec3(0, 1, 0), 60, aspect_ratio);
 
     // 渲染
     cout << "P3\n"
