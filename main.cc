@@ -94,50 +94,76 @@ color3 ray_color(const ray& r,const hittable & world, int depth)
     auto t = 0.5 * (unit_dirction.y() + 1.0);
     return (1.0 - t) * color3(1.0, 1.0, 1.0) + t * color3(0.5, 0.7, 1.0);
 }
+hittable_list random_scene() {
+    hittable_list world;
+
+    //添加地面材质
+    auto ground_material = make_shared<lambertian>(color3(0.5, 0.5, 0.5));
+    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
+
+    //随机生成小球
+    for (int a = -11; a < 11; a++) {
+        for (int b = -11; b < 11; b++) {
+            auto choose_mat = random_double();
+            point3 center(a + 0.9 * random_double(), 0.2, b + 0.9 * random_double());
+
+            if ((center - point3(4, 0.2, 0)).length() > 0.9) {
+                shared_ptr<material> sphere_material;
+
+                if (choose_mat < 0.8) {
+                    // diffuse
+                    auto albedo = color3::random() * color3::random();
+                    sphere_material = make_shared<lambertian>(albedo);
+                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+                }
+                else if (choose_mat < 0.95) {
+                    // metal
+                    auto albedo = color3::random(0.5, 1);
+                    auto fuzz = random_double(0, 0.5);
+                    sphere_material = make_shared<metal>(albedo, fuzz);
+                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+                }
+                else {
+                    // glass
+                    sphere_material = make_shared<dielectric>(1.5);
+                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+                }
+            }
+        }
+    }
+    auto material1 = make_shared<dielectric>(1.5);
+    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
+
+    auto material2 = make_shared<lambertian>(color3(0.4, 0.2, 0.1));
+    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+
+    auto material3 = make_shared<metal>(color3(0.7, 0.6, 0.5), 0.0);
+    world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+
+    return world;
+}
 
 int main()
 {
     // 图片定义
-    const auto aspect_ratio = 16.0/9.0;//屏幕比例
-    const int image_width = 400;
+    const auto aspect_ratio = 3.0/2.0;//屏幕比例
+    const int image_width = 1200;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     //const int image_width = 256;  // columns
     //const int image_height = 256; // rows
-    const int samples_per_pixel = 100;
+    const int samples_per_pixel = 500;
     const int max_depth = 50;//采样次数
 
     //世界
-    hittable_list world;
-    //world.add(make_shared<sphere>(point3(0, +100.5, -1.0), 100));
-    //world.add(make_shared<sphere>(point3(0, 0, -1.0), 0.5));
-    //world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
-
-    //添加材质
-    //auto R = cos(pi / 4);
-
-    //auto material_left = make_shared<lambertian>(color3(0, 0, 1));
-    //auto material_right = make_shared<lambertian>(color3(1, 0, 0));
-
-    //world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
-    //world.add(make_shared<sphere>(point3(R, 0, -1), R, material_right));
-
-    auto material_ground = make_shared<lambertian>(color3(0.8, 0.8, 0.0));
-    auto material_center = make_shared<lambertian>(color3(0.1, 0.2, 0.5));
-    auto material_left = make_shared<dielectric>(1.5);
-    auto material_right = make_shared<metal>(color3(0.8, 0.6, 0.2), 0.0);
-
-    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
-    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+    //hittable_list world;
+    auto world = random_scene();
 
     //相机
-    point3 lookfrom(3, 3, 2);
-    point3 lookat(0, 0, -1);
+    point3 lookfrom(13, 2, 3);
+    point3 lookat(0, 0, 0);
     vec3 vup(0, 1, 0);
-    auto dist_to_focus = (lookfrom - lookat).length();
-    auto aperture = 2.0;
+    auto dist_to_focus = 10.0;
+    auto aperture = 0.1;
 
     camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
 
@@ -160,17 +186,6 @@ int main()
                 pixel_color += ray_color(r, world, max_depth);
             }
             Print_Color(cout, pixel_color, samples_per_pixel);
-
-
-
-           // //比例切换
-           // //起点+横向方向位置（x）+纵向方向位置（y）-起点位置（视窗位于z轴负方向）
-           // auto v = double(i) / (image_height - 1);
-           // auto h = double(j) / (image_width - 1);
-           // ray r(origin, lower_left_corner + h * horizontal + v * vectical - origin);
-           // color3 Color_pixel = ray_color(r, world);
-           // //color3 Color_pixel (double(j) / (image_width - 1), double(i) / (image_height - 1), 0.25);
-           // Print_Color(cout,Color_pixel);
         }
     }
     cerr << "\nDone" << endl;
