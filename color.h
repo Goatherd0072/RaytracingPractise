@@ -11,8 +11,8 @@ void Print_Color(ostream & out,color3 Color_Pixel,int samples_per_pixel)
 	auto g = Color_Pixel.y();
 	auto b = Color_Pixel.z();
 
-	//处理颜色与样品数
-	//将颜色值除以样品数量，并取其平方根以进行 gamma矫正
+	//处理颜色与采样次数
+	//将颜色值除以采样次数，并取其平方根以进行 gamma矫正
 	auto scale = 1.0 / samples_per_pixel;
 	r = sqrt(r * scale);
 	g = sqrt(g * scale);

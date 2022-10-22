@@ -182,6 +182,17 @@ vec3 random_unit_hemisphere(const vec3& normal)
 		return -unit_sphere;
 	}
 }
+//生成随机点，模拟透镜上发射出任意的点
+vec3 random_in_uint_disk()
+{
+	while (true)
+	{
+		auto p = vec3(random_double(-1, 1), random_double(-1, 1), 0);
+		if (p.length_squared() >= 1) continue;
+		return p;
+	}
+}
+
 
 //计算反射光向量，v入射光线，n法线
 vec3 reflect(const vec3& v,const vec3& n)
@@ -202,5 +213,6 @@ vec3 refract(const vec3& R, const vec3& n, double ratio)
 	vec3 R2 = -sqrt(fabs(1.0 - R1.length_squared())) * n;
 	return R1 + R2;
 }
+
 
 #endif

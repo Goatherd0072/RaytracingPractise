@@ -104,7 +104,7 @@ int main()
     //const int image_width = 256;  // columns
     //const int image_height = 256; // rows
     const int samples_per_pixel = 100;
-    const int max_depth = 50;//射线颜色递归次数
+    const int max_depth = 50;//采样次数
 
     //世界
     hittable_list world;
@@ -133,7 +133,13 @@ int main()
     world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
     //相机
-    camera cam(point3(0, 2, 1), point3(0, 0, -1), vec3(0, 1, 0), 60, aspect_ratio);
+    point3 lookfrom(3, 3, 2);
+    point3 lookat(0, 0, -1);
+    vec3 vup(0, 1, 0);
+    auto dist_to_focus = (lookfrom - lookat).length();
+    auto aperture = 2.0;
+
+    camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
 
     // 渲染
     cout << "P3\n"
