@@ -8,18 +8,18 @@ class sphere : public hittable
 {
 public:
 	sphere(){}
-    sphere(point3 c, double r,shared_ptr<material> m) :center(c), radius(r), mat_ptr(m) {};
+    sphere(point3 c, float r,shared_ptr<material> m) :center(c), radius(r), mat_ptr(m) {};
 
-	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& record) const override;
+	virtual bool hit(const ray& r, float t_min, float t_max, hit_record& record) const override;
 
 public:
 	point3 center;
-	double radius;
+	float radius;
     shared_ptr<material> mat_ptr;
 
 };
 
-bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const
+bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
 {
     vec3 P_C = r.origin() - center;//(P0-C)
     vec3 U = r.direction();//U

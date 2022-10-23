@@ -1,5 +1,7 @@
-﻿  main.cc
-C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\math_constants.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\camera.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\material.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+﻿  Compiling CUDA source file main.cu...
+  
+  C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise>"D:\CUDA\v11.8\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\bin\HostX64\x64" -x cu   -ID:\CUDA\v11.8\include -ID:\CUDA\v11.8\include  -G   --keep-dir x64\Debug  -maxrregcount=0  --machine 64 --compile -cudart static  -g  -D_DEBUG -D_CONSOLE -D_UNICODE -DUNICODE -Xcompiler "/EHsc /W3 /nologo /Od /Fdx64\Debug\vc143.pdb /FS /Zi /RTC1 /MDd " -o C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\x64\Debug\main.cu.obj "C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\main.cu" 
+C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\main.cu(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\main.cu(1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  main.cu
   RaytracingPractise.vcxproj -> C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\x64\Debug\RaytracingPractise.exe

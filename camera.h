@@ -12,10 +12,10 @@ public:
 	camera( point3 lookfrom,//起点
 			point3 lookat,//终点
 			vec3 Vup,//向上的向量
-			double vFOV, //垂直的FOV
-			double aspect_ratio,//屏幕比例
-			double aperture,//光圈直径
-			double focus_dist //对焦距离 
+			float vFOV, //垂直的FOV
+			float aspect_ratio,//屏幕比例
+			float aperture,//光圈直径
+			float focus_dist //对焦距离 
 			//在透镜前设置光圈和对焦距离，实现散焦模糊（景深）
 	){
 		//垂直方向的 FOV
@@ -43,7 +43,7 @@ public:
 
 		lens_radius = aperture / 2;
 	 }
-	ray get_ray(double s,double t) const//从相机中心生成射线
+	ray get_ray(float s,float t) const//从相机中心生成射线
 	{
 		//Defocus Blur 失焦模糊（景深）
 		vec3 rd = lens_radius * random_in_uint_disk();//在透镜内产生随机点
@@ -58,7 +58,7 @@ private:
 	vec3 horizontal;
 	vec3 vectical;
 	vec3 u, v, w;
-	double lens_radius;//透镜半径
+	float lens_radius;//透镜半径
 };
 
 

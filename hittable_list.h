@@ -17,12 +17,12 @@ public:
 
 	void clear() { objects.clear(); }
 	void add(shared_ptr<hittable> object) { objects.push_back(object); }//把object压入vector
-	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& record) const override;
+	virtual bool hit(const ray& r, float t_min, float t_max, hit_record& record) const override;
 
 public:
 	std::vector<shared_ptr<hittable>> objects;
 };
-bool hittable_list::hit(const ray& r, double t_min, double t_max, hit_record& record) const
+bool hittable_list::hit(const ray& r, float t_min, float t_max, hit_record& record) const
 {
     hit_record temp_rec;
     bool hit_anything = false;

@@ -12,23 +12,23 @@ class vec3
 public:
 	//初始化构造函数
     vec3() : e{ 0, 0, 0 } {};
-    vec3(double e0, double e1, double e2) : e{ e0, e1, e2 } {};//x,y,z
+    vec3(float e0, float e1, float e2) : e{ e0, e1, e2 } {};//x,y,z
 	
-    double x() const { return e[0]; }
-    double y() const { return e[1]; }
-    double z() const { return e[2]; }
+    float x() const { return e[0]; }
+    float y() const { return e[1]; }
+    float z() const { return e[2]; }
 	
 	/* 
-	double &operator[](int i); 
-	double operator[](int i)const;
+	float &operator[](int i); 
+	float operator[](int i)const;
 	要操作数组中的元素当然是第一个；要给一个变量赋值。就是第二个了。
 	一个用于左值，一个用于右值。
 
-	a[3] = 5; 这里用的是double & operator[](int i);
-	double x = a[3]; 这里用的是double operator[](int i)const;
+	a[3] = 5; 这里用的是float & operator[](int i);
+	float x = a[3]; 这里用的是float operator[](int i)const;
 	*/
-	double operator[](int i) const { return e[i]; }
-	double & operator[](int i) { return e[i]; }
+	float operator[](int i) const { return e[i]; }
+	float & operator[](int i) { return e[i]; }
 	
     //相反向量
     vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
@@ -43,7 +43,7 @@ public:
     }
 	
 	//向量的标量乘法
-	vec3& operator*=(const double& t)
+	vec3& operator*=(const float& t)
 	{
 		e[0] *= t;
 		e[1] *= t;
@@ -52,29 +52,29 @@ public:
 	}
 	
     //向量的标量除法(等于乘以倒数)
-	vec3& operator/=(const double& t)
+	vec3& operator/=(const float& t)
 	{
 		return *this *= 1 / t;
 	}
 	
 	//向量的模的平方
-	double length_squared() const
+	float length_squared() const
 	{
 		return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
 	}
 	//向量的模
-	double length() const
+	float length() const
 	{
 		return sqrt(length_squared());
 	}
 	//返回随机的向量
 	inline static vec3 random()
 	{
-		return vec3(random_double(), random_double(), random_double());
+		return vec3(random_float(), random_float(), random_float());
 	}
-	inline static vec3 random(double min, double max)
+	inline static vec3 random(float min, float max)
 	{
-		return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+		return vec3(random_float(min, max), random_float(min, max), random_float(min, max));
 	}
 	//判断向量是否在各个方向都为0
 	bool near_zero() const
@@ -84,7 +84,7 @@ public:
 	}
 	
 public:
-    double e[3]; //坐标
+    float e[3]; //坐标
 };
 
 //别名声明， 使坐标点和颜色和向量用同一个类
@@ -120,22 +120,22 @@ inline vec3 operator *(const vec3& e1, const vec3& e2)
 }
 //标量乘法
 //v * t
-inline vec3 operator *(const vec3& v, const double& t)
+inline vec3 operator *(const vec3& v, const float& t)
 {
 	return vec3(v.e[0]*t, v.e[1]*t,v.e[2]*t);
 }
 // t * v
-inline vec3 operator *(const double t,const vec3 & v)
+inline vec3 operator *(const float t,const vec3 & v)
 {
 	return v * t;
 }
 //向量除法
-inline vec3 operator /(vec3 v, double t)
+inline vec3 operator /(vec3 v, float t)
 {
 	return v*(1/t);
 }
 //点乘（数量积）标量  a·b=a1​b1​+a2​b2​+…+an​bn
-inline double dot(const vec3 & v1, const vec3 & v2)
+inline float dot(const vec3 & v1, const vec3 & v2)
 {
 	return (v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2]);
 }
@@ -187,7 +187,7 @@ vec3 random_in_uint_disk()
 {
 	while (true)
 	{
-		auto p = vec3(random_double(-1, 1), random_double(-1, 1), 0);
+		auto p = vec3(random_float(-1, 1), random_float(-1, 1), 0);
 		if (p.length_squared() >= 1) continue;
 		return p;
 	}
@@ -206,7 +206,7 @@ vec3 reflect(const vec3& v,const vec3& n)
 //R1 = η/η′ * (R+cosθn) = η/η′ * (R+(−R⋅n)n)
 //R2 = -sqrt(1 - |R1|^2 )* n
 //详细推导过程 ： https://zhuanlan.zhihu.com/p/91129191  https://github.com/RayTracing/raytracing.github.io/issues/1082 TODO：
-vec3 refract(const vec3& R, const vec3& n, double ratio)
+vec3 refract(const vec3& R, const vec3& n, float ratio)
 {
 	auto cos_theta = fmin(dot(-R, n), 1.0);
 	vec3 R1 = ratio * (R + cos_theta * n);

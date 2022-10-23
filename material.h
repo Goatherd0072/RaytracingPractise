@@ -44,7 +44,7 @@ public:
 	}
 public:
 	color3 albedo;
-	//double p;
+	//float p;
 	//color3 aldedo_p = albedo / p;//也可以以某个概率p进行散射
 };
 
@@ -52,7 +52,7 @@ public:
 class metal : public material
 {
 public:
-	metal(const color3& a, double f) : albedo(a), fuzz(f < 1 ? f : 1) {}
+	metal(const color3& a, float f) : albedo(a), fuzz(f < 1 ? f : 1) {}
 	virtual bool scatter(const ray& r_in, const hit_record& rec, color3& attenuation, ray& scattered)
 		const override
 	{
@@ -64,7 +64,7 @@ public:
 
 public:
 	color3 albedo;
-	double fuzz;//模糊值，
+	float fuzz;//模糊值，
 };
 
 //Dielectrics 介质，模拟光传播过程中的介质，以实现玻璃、钻石等折射的效果
@@ -72,24 +72,24 @@ public:
 class dielectric : public material
 {
 public:
-	dielectric(double IR) : ir(IR){}
+	dielectric(float IR) : ir(IR){}
 
 	virtual bool scatter(const ray& r_in, const hit_record& rec, color3& attenuation, ray& scattered)
 		const override
 	{
 		attenuation = color3(1.0, 1.0, 1.0);
-		double refraction_ratio = rec.front_face ? (1.0 / ir) : ir;//如果在外侧，根据折射定律，折射率则为倒数
+		float refraction_ratio = rec.front_face ? (1.0 / ir) : ir;//如果在外侧，根据折射定律，折射率则为倒数
 
 		vec3 unit_dir = unit_vec3(r_in.direction());
 		//vec3 unit_n = unit_vec3(rec.normal);
 
-		double cos_theta = fmin(dot(-unit_dir, rec.normal), 1.0);
-		double sin_theta = sqrt(1 - cos_theta * cos_theta);
+		float cos_theta = fmin(dot(-unit_dir, rec.normal), 1.0);
+		float sin_theta = sqrt(1 - cos_theta * cos_theta);
 
 		bool can_Refraction = sin_theta * refraction_ratio > 1.0;//判断能不能进行折射
 		vec3 direction;
 
-		if (can_Refraction || Schlick_Approximation(cos_theta, refraction_ratio) > random_double())
+		if (can_Refraction || Schlick_Approximation(cos_theta, refraction_ratio) > random_float())
 		{
 			//必须进行反射
 			direction = reflect(unit_dir, rec.normal);
@@ -105,14 +105,14 @@ public:
 	}
 
 public:
-	double ir;//折射率
+	float ir;//折射率
 
 private:
 	//使用Schlick Approximation来模拟玻璃等随角度进行变化的折射率。 https://en.wikipedia.org/wiki/Schlick%27s_approximation 
 	// 折射率 r = R0 + (1 - R0) ( (1 - cos) )^5 
 	// R0 = ( (n1 - n2)/(n1 + n2) )^2 
 	//R0是光的反射系数的平行于法线， n1 n2为两侧介质的折射率， 由于图形学入射光线大部分情况都在空气，所以 n1 近似于 1
-	static double Schlick_Approximation(double cos_t, double index_ref)
+	static float Schlick_Approximation(float cos_t, float index_ref)
 	{
 		auto R0 = (1 - index_ref) / (1 + index_ref);
 		R0 *= R0;
