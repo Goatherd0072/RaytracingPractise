@@ -193,15 +193,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="color.h" />
-    <ClInclude Include="hittable.h" />
-    <ClInclude Include="hittable_list.h" />
-    <ClInclude Include="material.h" />
-    <ClInclude Include="math_constants.h" />
-    <ClInclude Include="ray.h" />
-    <ClInclude Include="sphere.h" />
-    <ClInclude Include="vec3.h" />
+    <ClInclude Include="camera.cuh" />
+    <ClInclude Include="color.cuh" />
+    <ClInclude Include="hittable.cuh" />
+    <ClInclude Include="hittable_list.cuh" />
+    <ClInclude Include="material.cuh" />
+    <ClInclude Include="ray.cuh" />
+    <ClInclude Include="sphere.cuh" />
+    <ClInclude Include="vec3.cuh" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="main.cu">
