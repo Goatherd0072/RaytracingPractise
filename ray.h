@@ -12,15 +12,15 @@ P(t) = P0 +tU (P0 为射线起点，U 为射线方向，t 为长度
 class ray
 {
 public:
-	ray() {}
-	ray(const point3& Origin, const vec3& Direction) : OriP(Origin), Dir(Direction) {}
+	__device__ ray() {}
+	__device__ ray(const point3& Origin, const vec3& Direction) : OriP(Origin), Dir(Direction) {}
 
-	point3 origin() const { return OriP; }
-	vec3 direction() const { return Dir; }
+	__device__ point3 origin() const { return OriP; }
+	__device__ vec3 direction() const { return Dir; }
 
 	//参数方程
 	//给定一个t 则可得到向量终点的位置
-	point3 at(double t) const
+	__device__ point3 at(double t) const
 	{
 		return point3(OriP + t * Dir);
 	}

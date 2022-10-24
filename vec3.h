@@ -11,12 +11,16 @@ class vec3
 {
 public:
 	//初始化构造函数
-    vec3() : e{ 0, 0, 0 } {};
-    vec3(float e0, float e1, float e2) : e{ e0, e1, e2 } {};//x,y,z
+	__host__ __device__  vec3() : e{ 0, 0, 0 } {};
+	__host__ __device__  vec3(float e0, float e1, float e2) : e{ e0, e1, e2 } {};//x,y,z
 	
-    float x() const { return e[0]; }
-    float y() const { return e[1]; }
-    float z() const { return e[2]; }
+	__host__ __device__  float x() const { return e[0]; }
+	__host__ __device__  float y() const { return e[1]; }
+	__host__ __device__  float z() const { return e[2]; }
+
+	__host__ __device__  float r() const { return e[0]; }
+	__host__ __device__  float g() const { return e[1]; }
+	__host__ __device__  float b() const { return e[2]; }
 	
 	/* 
 	float &operator[](int i); 
@@ -27,14 +31,14 @@ public:
 	a[3] = 5; 这里用的是float & operator[](int i);
 	float x = a[3]; 这里用的是float operator[](int i)const;
 	*/
-	float operator[](int i) const { return e[i]; }
-	float & operator[](int i) { return e[i]; }
+	__host__ __device__  float operator[](int i) const { return e[i]; }
+	__host__ __device__  float & operator[](int i) { return e[i]; }
 	
     //相反向量
-    vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
+	__host__ __device__  vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
 
 	//向量加法
-    vec3& operator+=(const vec3& v)
+	__host__ __device__ vec3& operator+=(const vec3& v)
     {
         e[0] += v.e[0];
         e[1] += v.e[1];
@@ -43,7 +47,7 @@ public:
     }
 	
 	//向量的标量乘法
-	vec3& operator*=(const float& t)
+	__host__ __device__ vec3& operator*=(const float& t)
 	{
 		e[0] *= t;
 		e[1] *= t;
@@ -52,34 +56,34 @@ public:
 	}
 	
     //向量的标量除法(等于乘以倒数)
-	vec3& operator/=(const float& t)
+	__host__ __device__ vec3& operator/=(const float& t)
 	{
 		return *this *= 1 / t;
 	}
 	
 	//向量的模的平方
-	float length_squared() const
+	__host__ __device__ float length_squared() const
 	{
 		return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
 	}
 	//向量的模
-	float length() const
+	__host__ __device__ float length() const
 	{
 		return sqrt(length_squared());
 	}
-	//返回随机的向量
-	inline static vec3 random()
-	{
-		return vec3(random_float(), random_float(), random_float());
-	}
-	inline static vec3 random(float min, float max)
-	{
-		return vec3(random_float(min, max), random_float(min, max), random_float(min, max));
-	}
+	////返回随机的向量
+	//inline static vec3 random()
+	//{
+	//	return vec3(random_float(), random_float(), random_float());
+	//}
+	//inline static vec3 random(float min, float max)
+	//{
+	//	return vec3(random_float(min, max), random_float(min, max), random_float(min, max));
+	//}
 	//判断向量是否在各个方向都为0
 	bool near_zero() const
 	{
-		const auto s = 1e-8;
+		const auto s = 1e-8f;
 		return fabs(e[0]) < s && fabs(e[1]) < s && fabs(e[2]) < s;
 	}
 	
@@ -104,94 +108,94 @@ inline ostream& operator<<(ostream& out, const vec3& v)
 	return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
 }
 //加法
-inline vec3 operator +(const vec3 & e1,const vec3 & e2)
+__host__ __device__ inline vec3 operator +(const vec3 & e1,const vec3 & e2)
 {
 	return vec3(e1.e[0] + e2.e[0], e1.e[1] + e2.e[1], e1.e[2] + e2.e[2]);
 }
 //减法
-inline vec3 operator -(const vec3& e1, const vec3& e2)
+__host__ __device__ inline vec3 operator -(const vec3& e1, const vec3& e2)
 {
 	return vec3(e1.e[0] - e2.e[0], e1.e[1] - e2.e[1], e1.e[2] - e2.e[2]);
 }
 //向量间乘法
-inline vec3 operator *(const vec3& e1, const vec3& e2)
+__host__ __device__ inline vec3 operator *(const vec3& e1, const vec3& e2)
 {
 	return vec3(e1.e[0] * e2.e[0], e1.e[1] * e2.e[1], e1.e[2] * e2.e[2]);
 }
 //标量乘法
 //v * t
-inline vec3 operator *(const vec3& v, const float& t)
+__host__ __device__ inline vec3 operator *(const vec3& v, const float& t)
 {
 	return vec3(v.e[0]*t, v.e[1]*t,v.e[2]*t);
 }
 // t * v
-inline vec3 operator *(const float t,const vec3 & v)
+__host__ __device__ inline vec3 operator *(const float t,const vec3 & v)
 {
 	return v * t;
 }
 //向量除法
-inline vec3 operator /(vec3 v, float t)
+__host__ __device__ inline vec3 operator /(vec3 v, float t)
 {
 	return v*(1/t);
 }
 //点乘（数量积）标量  a·b=a1​b1​+a2​b2​+…+an​bn
-inline float dot(const vec3 & v1, const vec3 & v2)
+__host__ __device__ inline float dot(const vec3 & v1, const vec3 & v2)
 {
 	return (v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2]);
 }
 //                         x1 y1 z1
 //叉乘（向量积）矢量   aXb = x2 y2 z2  =(y1*z2-z1*y2, z1*x2-x1*z2, x1*y2-y1*x2 )
 //
-inline vec3 cross(const vec3& v1, const vec3& v2)
+__host__ __device__ inline vec3 cross(const vec3& v1, const vec3& v2)
 {
 	return vec3(v1.e[1]*v2.e[2]-v1.e[2]*v2.e[1],
 				v1.e[2]*v2.e[0]-v1.e[0]*v2.e[2],
 				v1.e[0]*v2.e[1]-v1.e[1]*v2.e[0]);
 }
 //单位向量 = a/|a|
-inline vec3 unit_vec3(vec3 v)
+__host__ __device__ inline vec3 unit_vec3(vec3 v)
 {
 	return v / v.length();
 }
 
-//随机生成碰撞点漫反射范围的随机单位球
-vec3 random_unit_sphere()
-{
-	while (true)
-	{
-		auto c = vec3::random(-1, 1);
-		if (c.length_squared() >= 1) continue;//保证球的大小在单位球内
-		return c;
-	}
-}
-//碰撞点与单位球的随机向量，以实现 Lambertian反射
-vec3 random_unit_vector()
-{
-	return unit_vec3(random_unit_sphere());
-}
-//随机生成碰撞点漫反射范围的随机单位半球,以便实现半球散射
-vec3 random_unit_hemisphere(const vec3& normal)
-{
-	vec3  unit_sphere = random_unit_sphere();
-	if (dot(unit_sphere, normal) > 0.0)//如果半球和法线在一个表面
-	{
-		return unit_sphere;
-	}
-	else
-	{
-		return -unit_sphere;
-	}
-}
-//生成随机点，模拟透镜上发射出任意的点
-vec3 random_in_uint_disk()
-{
-	while (true)
-	{
-		auto p = vec3(random_float(-1, 1), random_float(-1, 1), 0);
-		if (p.length_squared() >= 1) continue;
-		return p;
-	}
-}
+////随机生成碰撞点漫反射范围的随机单位球
+//vec3 random_unit_sphere()
+//{
+//	while (true)
+//	{
+//		auto c = vec3::random(-1, 1);
+//		if (c.length_squared() >= 1) continue;//保证球的大小在单位球内
+//		return c;
+//	}
+//}
+////碰撞点与单位球的随机向量，以实现 Lambertian反射
+//vec3 random_unit_vector()
+//{
+//	return unit_vec3(random_unit_sphere());
+//}
+////随机生成碰撞点漫反射范围的随机单位半球,以便实现半球散射
+//vec3 random_unit_hemisphere(const vec3& normal)
+//{
+//	vec3  unit_sphere = random_unit_sphere();
+//	if (dot(unit_sphere, normal) > 0.0)//如果半球和法线在一个表面
+//	{
+//		return unit_sphere;
+//	}
+//	else
+//	{
+//		return -unit_sphere;
+//	}
+//}
+////生成随机点，模拟透镜上发射出任意的点
+//vec3 random_in_uint_disk()
+//{
+//	while (true)
+//	{
+//		auto p = vec3(random_float(-1, 1), random_float(-1, 1), 0);
+//		if (p.length_squared() >= 1) continue;
+//		return p;
+//	}
+//}
 
 
 //计算反射光向量，v入射光线，n法线
@@ -208,9 +212,9 @@ vec3 reflect(const vec3& v,const vec3& n)
 //详细推导过程 ： https://zhuanlan.zhihu.com/p/91129191  https://github.com/RayTracing/raytracing.github.io/issues/1082 TODO：
 vec3 refract(const vec3& R, const vec3& n, float ratio)
 {
-	auto cos_theta = fmin(dot(-R, n), 1.0);
+	auto cos_theta = fmin(dot(-R, n), 1.0f);
 	vec3 R1 = ratio * (R + cos_theta * n);
-	vec3 R2 = -sqrt(fabs(1.0 - R1.length_squared())) * n;
+	vec3 R2 = -sqrt(fabs(1.0f - R1.length_squared())) * n;
 	return R1 + R2;
 }
 
