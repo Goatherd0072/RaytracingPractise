@@ -1,6 +1,8 @@
 # RaytracingPractise
 
 一个根据 [book: Ray Tracing in One Weekend](https://github.com/RayTracing/raytracing.github.io) 的小练习
+[image文件夹](./image/)是过程中生成的一些图片，最终生成的图片如下
+![final image](./image/final.png)
 
 # 使用
 
