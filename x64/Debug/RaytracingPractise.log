@@ -1,5 +1,6 @@
 ﻿  main.cc
-C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\math_constants.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\camera.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\material.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\src\math_constants.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\src\camera.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\src\material.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  LINK : 没有找到 C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\x64\Debug\RaytracingPractise.exe 或上一个增量链接没有生成它；正在执行完全链接
   RaytracingPractise.vcxproj -> C:\Users\Goatherd\Desktop\RaytracingPractise\RaytracingPractise\x64\Debug\RaytracingPractise.exe
