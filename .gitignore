@@ -33,3 +33,7 @@
 #Directories
 .vs/
 test/
+x64/
+out/
+RaytracingPractise.dir/
+CMakeFiles/

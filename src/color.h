@@ -5,6 +5,7 @@
 
 #include<iostream>
 
+
 void Print_Color(ostream & out,color3 Color_Pixel,int samples_per_pixel)
 {
 	auto r = Color_Pixel.x();

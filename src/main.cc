@@ -11,6 +11,9 @@
 #include"vec3.h"
 #include"material.h"
 
+#include <omp.h>
+#include <time.h>
+
 using namespace std;
 
 /*
@@ -57,42 +60,77 @@ double hit_sphere(const point3& center, double r, const ray& p)
 将光线方向缩放为单位长度，根据颜色混合以实现垂直渐变。并利用插值实现颜色的渐变
 混合值=(1-t) * 起点值 + t * 终点值 ，t 为射线方向的单位向量缩放到y轴的值
 */
+
 color3 ray_color(const ray& r,const hittable & world, int depth)
 {
+	ray cur_ray = r;
+    color3 cur_attenuation = color3(1.0, 1.0, 1.0);
     hit_record rec;
-    
-    //限制递归次数
-    if (depth < 0)
+	
+    //限制递归次数,将递归改为循环，防止溢出
+    for (int i = 0; i < depth; i++)
     {
-        return color3(0, 0, 0);
-    }
 
-    if (world.hit(r, 0.001, infinity, rec))
-    {
-        //漫反射
-        //point3 target = rec.p + rec.normal + random_unit_hemisphere(rec.normal);//C 为交点外一随机圆的一点
-        //return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);//折射光线即为 C-P(交点)
+        if (world.hit(cur_ray, 0.001, infinity, rec))
+        {
+            ray scattered;//散射光
+            color3 attenuation;//衰减值
 
-        ray scattered;//散射光
-        color3 attenuation;//衰减值
-        if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
-            return attenuation * ray_color(scattered, world, depth - 1);
-        return color3(0, 0, 0);
-    }
-    //auto t = hit_sphere(point3(0, 0, -1), 0.5, r);
-    //if (t > 0.0) //确保是摄像机前方的物体
-    //{
-    //    vec3 Normal = unit_vec3(r.at(t) - vec3(0, 0, -1));
-    //    return 0.5 * color3(Normal.x() + 1, Normal.y() + 1, Normal.z() + 1);
-    //}
-    //在（0，0，-1）添加一个圆，射线过则变红
-    //if (hit_sphere(point3(0, 0, -1), 0.5, r))
-    //    return  color3(1, 0, 0);
+            if (rec.mat_ptr->scatter(cur_ray, rec, attenuation, scattered))
+			{
+                cur_attenuation = cur_attenuation * attenuation;
+				cur_ray = scattered;
+			}
+			else
+			{
+                return color3(0, 0, 0);
+            }
+        }
+        else
+        {
+            //渐变背景
+			vec3 unit_direction = unit_vec3(r.direction());
+			auto t = 0.5 * (unit_direction.y() + 1.0);
+			vec3 temC= (1.0 - t) * color3(1.0, 1.0, 1.0) + t * color3(0.5, 0.7, 1.0);
+            return cur_attenuation * temC;
+        }
+    }        
+    return color3(0, 0, 0);
+	//
+    ////hit_record rec;
+    ////限制递归次数
+    ////if (depth < 0)
+    ////{
+    ////    return color3(0, 0, 0);
+    ////}
 
-    //渐变背景
-    vec3 unit_dirction = unit_vec3(r.direction());
-    auto t = 0.5 * (unit_dirction.y() + 1.0);
-    return (1.0 - t) * color3(1.0, 1.0, 1.0) + t * color3(0.5, 0.7, 1.0);
+    ////if (world.hit(r, 0.001, infinity, rec))`
+    ////{
+    ////    漫反射
+    ////    point3 target = rec.p + rec.normal + random_unit_hemisphere(rec.normal);//C 为交点外一随机圆的一点
+    ////    return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);//折射光线即为 C-P(交点)
+
+    ////    ray scattered;//散射光
+    ////    color3 attenuation;//衰减值
+		
+    ////    if (rec.mat_ptr->scatter(r, rec, attenuation, scattered)) 
+    ////        return attenuation * ray_color(scattered, world, depth - 1);
+    ////    return color3(0, 0, 0);
+    ////}
+    ////auto t = hit_sphere(point3(0, 0, -1), 0.5, r);
+    ////if (t > 0.0) //确保是摄像机前方的物体
+    ////{
+    ////    vec3 Normal = unit_vec3(r.at(t) - vec3(0, 0, -1));
+    ////    return 0.5 * color3(Normal.x() + 1, Normal.y() + 1, Normal.z() + 1);
+    ////}
+    ////在（0，0，-1）添加一个圆，射线过则变红
+    ////if (hit_sphere(point3(0, 0, -1), 0.5, r))
+    ////    return  color3(1, 0, 0);
+
+    ////渐变背景
+    ////vec3 unit_dirction = unit_vec3(r.direction());
+    ////auto t = 0.5 * (unit_dirction.y() + 1.0);
+    ////return (1.0 - t) * color3(1.0, 1.0, 1.0) + t * color3(0.5, 0.7, 1.0);
 }
 hittable_list random_scene() {
     hittable_list world;
@@ -131,6 +169,7 @@ hittable_list random_scene() {
             }
         }
     }
+		
     auto material1 = make_shared<dielectric>(1.5);
     world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
 
@@ -145,13 +184,15 @@ hittable_list random_scene() {
 
 int main()
 {
+    #pragma omp parallel reduction(sumvec3 : vec3 : omp_out += omp_in) initializer (omp_priv=vec3(0,0,0))
+	
     // 图片定义
     const auto aspect_ratio = 3.0/2.0;//屏幕比例
     const int image_width = 1200;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     //const int image_width = 256;  // columns
     //const int image_height = 256; // rows
-    const int samples_per_pixel = 500;
+    const int samples_per_pixel = 100;
     const int max_depth = 50;//采样次数
 
     //世界
@@ -166,11 +207,16 @@ int main()
     auto aperture = 0.1;
 
     camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
-
+    
+	//计时器
+    clock_t start, end;
+    start = clock();
+	
     // 渲染
     cout << "P3\n"
          << image_width << " " << image_height << "\n255\n";
-
+	
+    #pragma omp parallel for
     for (int i = image_height - 1; i >= 0; i--)//每行
     {
         cerr << "RemainLine: " << i << " " << flush;
@@ -188,7 +234,10 @@ int main()
             Print_Color(cout, pixel_color, samples_per_pixel);
         }
     }
+    
     cerr << "\nDone" << endl;
-
-  
+        
+    end = clock();
+    double timer_seconds = ((double)(end - start)) / CLOCKS_PER_SEC;
+    std::cerr << "took " << timer_seconds << " seconds.\n";
 }
