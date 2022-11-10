@@ -8,20 +8,19 @@
 
 将ppm文件转为png格式需要用到[imagemagick](https://imagemagick.org/script/download.php)
 
-编译[./src文件夹](./src/)下的代码后，build文件夹下的 [Image_Generater.ps1](./build/Image_Generater.ps1)文件，放入.exe文件目录后，然后在Terminal中运行
+(Windows)编译项目后，在PowerShell中运行build文件夹下的 [Image_Generater.ps1](./build/Image_Generater.ps1)文件
 
 ```
 ./Image_Generater.ps1
 ```
 
-即可生成图片
+即在当前目录可生成图片
 
 # 加速
 
 - ## 多线程
 
-    于main.cc中加入了
-
+    用了OpenMP来进行多线程加速。由于Visual Studio的默认的MVSC环境不支持OpenMP 3.0以上的版本。所以在Windows系统需要用跨平台的编译器(例如该项目使用的是Clang)
 
 - ## cuda
 
